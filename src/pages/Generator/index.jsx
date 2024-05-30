@@ -33,7 +33,7 @@ export function Generator() {
 		compileProcessList().then(async (list) => {
 			setProcessesList(list.filter(process => {
 				for (let i = 0; i < selectedPrinters.length; i++) {
-					if (process.name.indexOf(selectedPrinters[i]) !== -1) {
+					if (process.identifier.indexOf(selectedPrinters[i]) !== -1) {
 						return true;
 					}
 				}

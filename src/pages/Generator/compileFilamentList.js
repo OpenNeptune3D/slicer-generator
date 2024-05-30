@@ -3,8 +3,8 @@ export default function compileFilamentList() {
     return  Promise.all(Object.keys(filament).map(async (key) => {
         const profile = await filament[key]();
         return {
-            "name": profile.name,
-            "identifier": key.split('/')[4],
+            "name": profile.name.replace("-OpenNept4une", ""),
+            "identifier": profile.name,
             "profile": profile
         }
     }));

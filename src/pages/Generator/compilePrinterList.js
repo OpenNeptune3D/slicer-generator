@@ -3,7 +3,7 @@ export default function compilePrinterList() {
     return  Promise.all(Object.keys(printers).map(async (key) => {
         const profile = await printers[key]();
         return {
-            "name": profile.name,
+            "name": profile.name.replace("-OpenNept4une", ""),
             "identifier": profile.name,
             "profile": profile
         }

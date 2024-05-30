@@ -3,8 +3,8 @@ export default function compileProcessList() {
     return  Promise.all(Object.keys(processes).map(async (key) => {
         const profile = await processes[key]();
         return {
-            "name": profile.name,
-            "identifier": key.split('/')[4],
+            "name": profile.name.replace("-OpenNept4une", ""),
+            "identifier": profile.name,
             "profile": profile
         }
     }));
