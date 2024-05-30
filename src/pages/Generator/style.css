@@ -1,21 +1,11 @@
-.logo {
-	width: 180px;
-	height: 180px;
-	padding-top: 3rem;
-}
-
-img {
-	margin-bottom: 1.5rem;
-}
-
-img:hover {
-	filter: drop-shadow(0 0 2em #408edf);
+.home>h1 {
+	margin:3rem;
 }
 
 .home .type-picker {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	column-gap: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .home .type-picker .active {
@@ -24,14 +14,18 @@ img:hover {
 }
 
 .resource {
-	padding: 0.75rem 1.5rem;
+	padding: 1rem 1.2rem;
 	border-radius: 0.5rem;
 	text-align: left;
 	text-decoration: none;
 	color: #222;
 	background-color: #f1f1f1;
 	border: 1px solid transparent;
-	margin-top: 2rem;
+	margin-top: 1rem;
+}
+
+.resource>h2 {
+	margin-bottom: 1rem;
 }
 
 .summary {
@@ -46,7 +40,7 @@ img:hover {
 }
 
 .generator-type {
-	padding: 0.75rem 1.5rem;
+	padding: 1.25rem 1.5rem;
 	border-radius: 0.5rem;
 	text-align: center;
 	text-decoration: none;
@@ -54,6 +48,11 @@ img:hover {
 	background-color: #f1f1f1;
 	border: 1px solid transparent;
 	cursor: pointer;
+	flex: calc(100% / 4);
+}
+
+.generator-type h1 {
+	margin: 0;
 }
 
 .generator-type:hover {
@@ -146,9 +145,30 @@ input {
 @media (prefers-color-scheme: dark) {
 	.resource {
 		color: #ccc;
-		background-color: #161616;
+		background-color: #222;
 	}
-	.resource:hover {
-		border: 1px solid #bbb;
+
+	.generator-type {
+		color: #ccc;
+		background-color: #222;
+	}
+	
+	.generator-type:hover {
+		border: 1px solid #408edf;
+	}
+	
+	.generate-button {
+		background-color: #408edf;
+		color: #ccc;
+	}
+	
+	.generate-button:hover {
+		background-color: #83b2e3;
+	}
+	
+	.generate-button.disabled {
+		background-color: #494949;
+		color: #161616;
+		cursor: not-allowed;
 	}
 }

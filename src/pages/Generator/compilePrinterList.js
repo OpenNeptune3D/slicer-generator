@@ -1,8 +1,11 @@
 export default function compilePrinterList() {
-    return [
-        {"name": "Elegoo Neptune 4", "identifier": "neptune4"},
-        {"name": "Elegoo Neptune 4 Pro", "identifier": "neptune4Pro"},
-        {"name": "Elegoo Neptune 4 Plus", "identifier": "neptune4Plus"},
-        {"name": "Elegoo Neptune 4 Max", "identifier": "neptune4Max"},
-    ]
+    const printers = import.meta.glob('../../profiles/printers/*.json');
+    return  Promise.all(Object.keys(printers).map(async (key) => {
+        const profile = await printers[key]();
+        return {
+            "name": profile.name,
+            "identifier": profile.name,
+            "profile": profile
+        }
+    }));
 }
