@@ -14,8 +14,8 @@ export default [
     },
     rules: {
       'no-unused-vars': ['error', {
-        varsIgnorePattern: "[A-Z][a-z]+",
-      }]
+        varsIgnorePattern: '[A-Z](?:[A-Z_]+|[a-z]+)',
+      }],
     },
     files: ["src/**/*.js", "src/**/*.jsx"],
   },

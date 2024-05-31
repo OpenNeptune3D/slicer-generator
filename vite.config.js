@@ -7,6 +7,10 @@ export default defineConfig({
 	build: {
 		sourcemap: true,
 	},
+	define: {
+		__GITHUB_REPO__: JSON.stringify('https://github.com/OpenNeptune3D/slicer-generator'),
+		__DISCORD_INVITE__: JSON.stringify('https://discord.gg/rzRnvh5NFv'),
+	},
 	plugins: [
 		preact({
 			prerender: {
