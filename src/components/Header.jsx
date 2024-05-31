@@ -6,14 +6,14 @@ export function Header() {
 
 	return (
 		<header>
-			<a href="/">
+			<a href={import.meta.env.BASE_URL}>
 			<img src={openneptuneLogo} alt="OpenNeptune logo" class="logo" />
 			</a>
 			<nav>
-				<a href="/" class={url == '/' && 'active'}>
+				<a href={import.meta.env.BASE_URL} class={url == import.meta.env.BASE_URL && 'active'}>
 					Home
 				</a>
-				<a href="/about" class={url == '/about' && 'active'}>
+				<a href={import.meta.env.BASE_URL+"about"} class={url == import.meta.env.BASE_URL+'about' && 'active'}>
 					About
 				</a>
 			</nav>
