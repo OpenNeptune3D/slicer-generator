@@ -63,6 +63,12 @@ header nav a:hover {
 	background-color: #0008;
 }
 
+.box {
+	color: #222;
+	background-color: #f1f1f1;
+	border: 1px solid transparent;
+}
+
 main {
 	margin: 0 auto;
 	text-align: center;
@@ -79,6 +85,11 @@ main {
 	:root {
 		color: #ccc;
 		background-color: #1a1a1a;
+	}
+
+	.box {
+		color: #ccc;
+		background-color: #222;
 	}
 }
 

@@ -14,6 +14,7 @@ export function Generator() {
 	const [selectedFilament, setSelectedFilament] = useState([]);
 	const [processesList, setProcessesList] = useState([]);
 	const [selectedProcesses, setSelectedProcesses] = useState([]);
+	const [slicerList] = useState([{"name": "OrcaSlicer", "identifier": "orcaslicer"}]);
 	const [selectedSlicer, setSelectedSlicer] = useState("orcaslicer");
 
 	useEffect(() => {
@@ -97,10 +98,10 @@ export function Generator() {
 			</section>
 			<section>
 				<MultiSelectionSection title="Printer Model" options={printerList} select={updateSelectedPrinters} selectedOptions={selectedPrinters} />
-			{type == "custom" && <MultiSelectionSection title="Filament" options={filamentList} select={updateSelectedFilaments} selectedOptions={selectedFilament}  />}
-			{type == "custom" && <MultiSelectionSection title="Print Settings" options={processesList} select={updateSelectedProcesses} selectedOptions={selectedProcesses} />}
-			<SelectionSection title="Slicer" options={[{"name": "OrcaSlicer", "identifier": "orcaslicer"}]} select={setSelectedSlicer} selectedOption={selectedSlicer} />
-			<SummarySection />
+				{type == "custom" && <MultiSelectionSection title="Filament" options={filamentList} select={updateSelectedFilaments} selectedOptions={selectedFilament} />}
+				{type == "custom" && <MultiSelectionSection title="Print Settings" options={processesList} select={updateSelectedProcesses} selectedOptions={selectedProcesses} />}
+				{slicerList.length > 1 && <SelectionSection title="Slicer" options={slicerList} select={setSelectedSlicer} selectedOption={selectedSlicer} /> }
+				{ <SummarySection /> }
 			</section>
 			<div class={(isValidSelection() ? "generate-button" : "generate-button disabled")} onClick={generateTapped}>Generate Profile</div>
 		</div>
@@ -113,19 +114,21 @@ function Selection(props) {
 	}
 
 	return (<label>
-        <input
-          type="radio"
-          checked={props.checked}
-          onClick={handleClick}
-        />
-        {props.label}
-      </label>)
+		<input
+			type="radio"
+			checked={props.checked}
+			onClick={handleClick}
+		/>
+		{props.label}
+	</label>)
 }
 
 function MultiSelectionSection(props) {
+	let emptyText = props.emptyText ? props.emptyText : "No options available";
 	return (
-		<div class="resource">
+		<div class="resource box">
 			<h2>{props.title}</h2>
+			{props.options.length == 0 && <p class="empty">{emptyText}</p>}
 			<ul>
 				{props.options && props.options.map(option => (
 					<li key={option.identifier}>
@@ -139,7 +142,7 @@ function MultiSelectionSection(props) {
 
 function SelectionSection(props) {
 	return (
-		<div class="resource">
+		<div class="resource box">
 			<h2>{props.title}</h2>
 			<ul>
 				{props.options && props.options.map(option => (
@@ -158,15 +161,15 @@ function TypeSection(props) {
 	}
 
 	return (
-		<div class={props.isActive ? 'generator-type active' : 'generator-type'} onClick={handleClick}>
+		<div class={props.isActive ? 'generator-type box active' : 'generator-type box'} onClick={handleClick}>
 			<h1>{props.title}</h1>
 		</div>
 	);
 }
 
-function SummarySection(props) {
+function SummarySection() {
 	return (
-		<div class="resource">
+		<div class="resource box">
 			<h2>Summary</h2>
 		</div>
 	)
