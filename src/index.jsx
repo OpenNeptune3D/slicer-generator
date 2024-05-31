@@ -12,8 +12,8 @@ export function App() {
 			<Header />
 			<main>
 				<Router>
-					<Route path="/" component={Generator} />
-					<Route path="/about" component={About} />
+					<Route path={import.meta.env.BASE_URL+"/"} component={Generator} />
+					<Route path={import.meta.env.BASE_URL+"/about"} component={About} />
 					<Route default component={NotFound} />
 				</Router>
 			</main>
