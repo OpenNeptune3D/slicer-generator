@@ -1,15 +1,7 @@
-# `create-preact`
+# OpenNeptune3D Slicer config generator
 
-<h2 align="center">
-  <img height="256" width="256" src="./src/assets/preact.svg">
-</h2>
+### ‼ This is still in development and not quite ready for use.
 
-<h3 align="center">Get started using Preact and Vite!</h3>
+Utility website to dynamically generate config bundles for supported slicers. (Currently OrcaSlicer. More in the future).
 
-## Getting Started
-
--   `npm run dev` - Starts a dev server at http://localhost:5173/
-
--   `npm run build` - Builds for production, emitting to `dist/`. Prerenders all found routes in app to static HTML
-
--   `npm run preview` - Starts a server at http://localhost:4173/ to test production build locally
+Allows you to select which printers you want to generate configurations for and also has the option to customize filaments and print processes that are included.
