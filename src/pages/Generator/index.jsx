@@ -35,14 +35,22 @@ export function Generator() {
 
     useEffect(() => {
         const extractPrinterName = (printer) => {
-            return printer.split(' (')[0];
+            return printer.split(' (')[0].replace(' ', ''); // Remove spaces for matching
         };
 
         const filtered = processesList.filter(process => {
-            const processPrinterName = process.identifier.split('@')[1].split(' (')[0];
-            const printerMatch = selectedPrinters.some(printer => extractPrinterName(printer) === processPrinterName);
-            const filamentMatch = selectedFilament.some(filament => process.identifier.includes(filament));
-            console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`); // Debug point: Verify matching logic
+            const processPrinterName = process.identifier.split('@')[1].split(' (')[0].replace(' ', '');
+            const printerMatch = selectedPrinters.some(printer => {
+                const printerName = extractPrinterName(printer);
+                console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
+                return printerName === processPrinterName;
+            });
+            const filamentMatch = selectedFilament.some(filament => {
+                const filamentName = filament.replace(' ', '');
+                console.log(`Checking if process identifier: ${process.identifier} includes filament name: ${filamentName}`);
+                return process.identifier.includes(filamentName);
+            });
+            console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`);
             return printerMatch && filamentMatch;
         });
 
