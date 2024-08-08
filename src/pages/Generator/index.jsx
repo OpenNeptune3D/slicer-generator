@@ -99,20 +99,38 @@ export function Generator() {
     const generateTapped = async () => {
         let filament;
         let processes;
+    
         if (type === "base") {
             filament = filamentList;
             processes = processesList;
         } else {
+            // Filter the selected filaments
             filament = filamentList.filter(filament => selectedFilament.includes(filament.identifier));
-            processes = filteredProcessesList.filter(process => selectedProcesses.includes(process.identifier));
+    
+            // Filter processes based on matching printer names
+            processes = processesList.filter(process => {
+                // Extract the printer name from the process identifier
+                const processPrinterName = process.identifier.split('@')[1].split(' (')[0].replace(/ /g, '');
+                // Check if any of the selected printers match the printer name in the process
+                return selectedPrinters.some(printer => {
+                    const printerName = extractPrinterName(printer);
+                    console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
+                    return printerName === processPrinterName;
+                });
+            });
         }
+    
+        // Create the ZIP file with selected printers, filaments, and processes
         const zip = await createZip(
             printerList.filter(printer => selectedPrinters.includes(printer.identifier)).map(printer => printer.profile),
             filament.map(filament => filament.profile),
             processes.map(process => process.profile)
         );
+    
+        // Save the ZIP file
         saveAs(zip, "OpenNept4une.orca_printer");
     };
+
 
     return (
         <div class="home">
