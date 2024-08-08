@@ -1,5 +1,5 @@
-.home>h1 {
-	margin:3rem;
+.home > h1 {
+    margin: 3rem;
 }
 
 .home .type-picker {
@@ -9,159 +9,158 @@
 }
 
 .home .type-picker .active {
-	background-color: #408edf;
-	color: #f6f6f6;
+    background-color: #408edf;
+    color: #f6f6f6;
 }
 
 .resource {
-	padding: 1rem 1.2rem;
-	border-radius: 0.5rem;
-	text-align: left;
-	text-decoration: none;
-	margin-top: 1rem;
+    padding: 1rem 1.2rem;
+    border-radius: 0.5rem;
+    text-align: left;
+    text-decoration: none;
+    margin-top: 1rem;
 }
 
-.resource>h2 {
-	margin-bottom: 1rem;
+.resource > h2 {
+    margin-bottom: 1rem;
 }
 
 .summary {
-	padding: 0.75rem 1.5rem;
-	border-radius: 0.5rem;
-	text-align: left;
-	text-decoration: none;
-	margin-top: 2rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-align: left;
+    text-decoration: none;
+    margin-top: 2rem;
 }
 
 .generator-type {
-	padding: 1.25rem 1.5rem;
-	border-radius: 0.5rem;
-	text-align: center;
-	text-decoration: none;
-	cursor: pointer;
-	flex: calc(100% / 4);
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    flex: calc(100% / 4);
 }
 
 .generator-type h1 {
-	margin: 0;
+    margin: 0;
 }
 
 .generator-type:hover {
-	border: 1px solid #408edf;
+    border: 1px solid #408edf;
 }
 
 .generate-button {
-	padding: 0.75rem 1.5rem;
-	border-radius: 0.5rem;
-	text-align: center;
-	text-decoration: none;
-	background-color: #408edf;
-	color: #fff;
-	font-weight: 600;
-	border: 1px solid transparent;
-	margin-top: 3rem;
-	font-size: 2rem;
-	cursor: pointer;
-	transition: 0.2s;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    text-decoration: none;
+    background-color: #408edf;
+    color: #fff;
+    font-weight: 600;
+    border: 1px solid transparent;
+    margin-top: 3rem;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
 .generate-button:hover {
-	background-color: #83b2e3;
+    background-color: #83b2e3;
 }
 
 .generate-button.disabled {
-	background-color: #bfbfbf;
-	color: #f6f6f6;
-	cursor: not-allowed;
+    background-color: #bfbfbf;
+    color: #f6f6f6;
+    cursor: not-allowed;
 }
 
 ul {
-	margin-block-start: 0;
-	padding-inline-start: 12px;
+    margin-block-start: 0;
+    padding-inline-start: 12px;
 }
 
 ul li {
-	list-style-type: none;
-	margin-bottom: 1rem;
+    list-style-type: none;
+    margin-bottom: 1rem;
 }
 
 ul li label {
-	font-family: system-ui, sans-serif;
-	font-size: 1.1rem;
-	line-height: 1.5;
-	display: grid;
-	grid-template-columns: 1em auto;
-	gap: 0.5em;
-	cursor: pointer;
+    font-family: system-ui, sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    display: grid;
+    grid-template-columns: 1em auto;
+    gap: 0.5em;
+    cursor: pointer;
 }
 
 input[type="radio"] {
-	appearance: none;
-	margin: 0;
-	font: inherit;
-	color: currentColor;
-	width: 1.2em;
-	height: 1.2em;
-	border: 1px solid currentColor;
-	border-radius: 50%;
-	transform: translateY(0.075em);
-	display: grid;
-	place-content: center;
-	cursor: pointer;
-  }
+    appearance: none;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: 1.2em;
+    height: 1.2em;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    transform: translateY(0.075em);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
 
 input[type="radio"]::before {
-	content: "";
-	width: 0.6em;
-	height: 0.6em;
-	border-radius: 50%;
-	transform: scale(0);
-	transition: 120ms transform ease-in-out;
-	box-shadow: inset 1em 1em #408edf;
+    content: "";
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #408edf;
 }
 
 input[type="radio"]:focus {
-	outline: max(2px, 0.15em) solid currentColor;
-	outline-offset: max(2px, 0.15em);
-  }
+    outline: max(2px, 0.15em) solid currentColor;
+    outline-offset: max(2px, 0.15em);
+}
 
 input[type="radio"]:checked::before {
-	transform: scale(1);
+    transform: scale(1);
 }
 
 input {
-	accent-color: #408edf;
+    accent-color: #408edf;
 }
 
 .empty {
-	text-align: center;
-	margin: 2rem 0rem;
-	color: #666;
+    text-align: center;
+    margin: 2rem 0;
+    color: #666;
 }
 
 .github {
-	width: 28px;
-	height: 28px;
+    width: 28px;
+    height: 28px;
 }
 
 @media (prefers-color-scheme: dark) {
-
-	.generator-type:hover {
-		border: 1px solid #408edf;
-	}
-	
-	.generate-button {
-		background-color: #408edf;
-		color: #ccc;
-	}
-	
-	.generate-button:hover {
-		background-color: #83b2e3;
-	}
-	
-	.generate-button.disabled {
-		background-color: #494949;
-		color: #161616;
-		cursor: not-allowed;
-	}
+    .generator-type:hover {
+        border: 1px solid #408edf;
+    }
+    
+    .generate-button {
+        background-color: #408edf;
+        color: #ccc;
+    }
+    
+    .generate-button:hover {
+        background-color: #83b2e3;
+    }
+    
+    .generate-button.disabled {
+        background-color: #494949;
+        color: #161616;
+        cursor: not-allowed;
+    }
 }
