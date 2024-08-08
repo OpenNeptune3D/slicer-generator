@@ -19,9 +19,18 @@ export function Generator() {
     const [selectedSlicer, setSelectedSlicer] = useState("orcaslicer");
 
     useEffect(() => {
-        compilePrinterList().then(list => setPrinterList(list));
-        compileFilamentList().then(list => setFilamentList(list));
-        compileProcessList().then(list => setProcessesList(list));
+        compilePrinterList().then(list => {
+            console.log('Printer List:', list); // Debug point: Verify printer list
+            setPrinterList(list);
+        });
+        compileFilamentList().then(list => {
+            console.log('Filament List:', list); // Debug point: Verify filament list
+            setFilamentList(list);
+        });
+        compileProcessList().then(list => {
+            console.log('Process List:', list); // Debug point: Verify process list
+            setProcessesList(list);
+        });
     }, []);
 
     useEffect(() => {
@@ -33,8 +42,11 @@ export function Generator() {
             const processPrinterName = process.identifier.split('@')[1].split(' (')[0];
             const printerMatch = selectedPrinters.some(printer => extractPrinterName(printer) === processPrinterName);
             const filamentMatch = selectedFilament.some(filament => process.identifier.includes(filament));
+            console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`); // Debug point: Verify matching logic
             return printerMatch && filamentMatch;
         });
+
+        console.log('Filtered Processes List:', filtered); // Debug point: Verify filtered processes list
         setFilteredProcessesList(filtered);
     }, [selectedPrinters, selectedFilament, processesList]);
 
