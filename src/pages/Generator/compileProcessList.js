@@ -5,7 +5,7 @@ export default async function compileProcessList() {
             const profile = await processes[key]();
             return {
                 name: profile.name.replace("-OpenNept4une", ""),
-                identifier: profile.name,
+                identifier: key.split('/').pop().replace('.json', ''), // Use the file name without the extension as identifier
                 profile: profile
             };
         }));
