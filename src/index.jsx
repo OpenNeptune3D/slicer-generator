@@ -1,5 +1,5 @@
 import { useLocation } from 'preact-iso';
-import openneptuneLogo from '../assets/OpenNept4une.svg';
+import openneptuneLogo from 'https://raw.githubusercontent.com/OpenNeptune3D/slicer-generator/main/src/assets/OpenNept4une.svg';
 
 export function Header() {
 	const { url } = useLocation();
