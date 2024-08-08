@@ -1,217 +1,295 @@
-import './style.css';
-import { useEffect, useState } from 'preact/hooks';
-import compilePrinterList from './compilePrinterList';
-import compileFilamentList from './compileFilamentList';
-import compileProcessList from './compileProcessList';
-import { createZip } from './createZip';
-import { saveAs } from 'file-saver';
+import "./style.css";
+import { useEffect, useState } from "preact/hooks";
+import compilePrinterList from "./compilePrinterList";
+import compileFilamentList from "./compileFilamentList";
+import compileProcessList from "./compileProcessList";
+import { createZip } from "./createZip";
+import { saveAs } from "file-saver";
 
 export function Generator() {
-    const [type, setType] = useState('base');
-    const [printerList, setPrinterList] = useState([]);
-    const [selectedPrinters, setSelectedPrinters] = useState([]);
-    const [filamentList, setFilamentList] = useState([]);
-    const [selectedFilament, setSelectedFilament] = useState([]);
-    const [processesList, setProcessesList] = useState([]);
-    const [filteredProcessesList, setFilteredProcessesList] = useState([]);
-    const [selectedProcesses, setSelectedProcesses] = useState([]);
-    const [slicerList] = useState([{ "name": "OrcaSlicer", "identifier": "orcaslicer" }]);
-    const [selectedSlicer, setSelectedSlicer] = useState("orcaslicer");
+  const [type, setType] = useState("base");
+  const [printerList, setPrinterList] = useState([]);
+  const [selectedPrinters, setSelectedPrinters] = useState([]);
+  const [filamentList, setFilamentList] = useState([]);
+  const [selectedFilament, setSelectedFilament] = useState([]);
+  const [processesList, setProcessesList] = useState([]);
+  const [filteredProcessesList, setFilteredProcessesList] = useState([]);
+  const [selectedProcesses, setSelectedProcesses] = useState([]);
+  const [slicerList] = useState([
+    { name: "OrcaSlicer", identifier: "orcaslicer" },
+  ]);
+  const [selectedSlicer, setSelectedSlicer] = useState("orcaslicer");
 
-    useEffect(() => {
-        compilePrinterList().then(list => {
-            console.log('Printer List:', list); // Debug point: Verify printer list
-            setPrinterList(list);
-        });
-        compileFilamentList().then(list => {
-            console.log('Filament List:', list); // Debug point: Verify filament list
-            setFilamentList(list);
-        });
-        compileProcessList().then(list => {
-            console.log('Process List:', list); // Debug point: Verify process list
-            setProcessesList(list);
-        });
-    }, []);
+  useEffect(() => {
+    compilePrinterList().then((list) => {
+      console.log("Printer List:", list); // Debug point: Verify printer list
+      setPrinterList(list);
+    });
+    compileFilamentList().then((list) => {
+      console.log("Filament List:", list); // Debug point: Verify filament list
+      setFilamentList(list);
+    });
+    compileProcessList().then((list) => {
+      console.log("Process List:", list); // Debug point: Verify process list
+      setProcessesList(list);
+    });
+  }, []);
 
-    useEffect(() => {
-        const extractPrinterName = (printer) => {
-            return printer.split(' (')[0].replace(/ /g, '');
-        };
-
-        const getFilamentMatchKeyword = (filament) => {
-            if (filament.includes('PLA')) {
-                return 'Standard';
-            }
-            if (filament.includes('PETG')) {
-                return 'PETG';
-            }
-            return filament.split(' ').pop(); // Extract the last part of the filament name if not PLA or PETG
-        };
-
-        const filtered = processesList.filter(process => {
-            const processPrinterName = process.identifier.split('@')[1].split(' (')[0].replace(/ /g, '');
-            const printerMatch = selectedPrinters.some(printer => {
-                const printerName = extractPrinterName(printer);
-                console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
-                return printerName === processPrinterName;
-            });
-            const filamentMatch = selectedFilament.some(filament => {
-                const filamentKeyword = getFilamentMatchKeyword(filament);
-                console.log(`Checking if process identifier: ${process.identifier} includes filament keyword: ${filamentKeyword}`);
-                return process.identifier.includes(filamentKeyword);
-            });
-            console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`);
-            return printerMatch && filamentMatch;
-        });
-
-        console.log('Filtered Processes List:', filtered); // Debug point: Verify filtered processes list
-        setFilteredProcessesList(filtered);
-    }, [selectedPrinters, selectedFilament, processesList]);
-
-    const isValidSelection = () => {
-        return selectedPrinters.length > 0 && selectedSlicer !== null;
+  useEffect(() => {
+    const extractPrinterName = (printer) => {
+      return printer.split(" (")[0].replace(/ /g, "");
     };
 
-    const updateSelectedPrinters = (printer) => {
-        if (selectedPrinters.includes(printer)) {
-            setSelectedPrinters(selectedPrinters.filter(p => p !== printer));
-        } else {
-            setSelectedPrinters([...selectedPrinters, printer]);
-        }
+    const getFilamentMatchKeyword = (filament) => {
+      if (filament.includes("PLA")) {
+        return "Standard";
+      }
+      if (filament.includes("PETG")) {
+        return "PETG";
+      }
+      return filament.split(" ").pop(); // Extract the last part of the filament name if not PLA or PETG
     };
 
-    const updateSelectedFilaments = (filament) => {
-        if (selectedFilament.includes(filament)) {
-            setSelectedFilament(selectedFilament.filter(p => p !== filament));
-        } else {
-            setSelectedFilament([...selectedFilament, filament]);
-        }
-    };
-
-    const updateSelectedProcesses = (process) => {
-        if (selectedProcesses.includes(process)) {
-            setSelectedProcesses(selectedProcesses.filter(p => p !== process));
-        } else {
-            setSelectedProcesses([...selectedProcesses, process]);
-        }
-    };
-
-    const generateTapped = async () => {
-        let filament;
-        let processes;
-
-        if (type === "base") {
-            filament = filamentList;
-            processes = processesList;
-        } else {
-            filament = filamentList.filter(filament => selectedFilament.includes(filament.identifier));
-
-            // Filter processes based on exact printer name match
-            processes = processesList.filter(process => {
-                const processPrinterName = process.identifier.split('@')[1].split(' (')[0].replace(/ /g, '');
-            
-                // Check if the selected printer matches exactly with the process printer name
-                return selectedPrinters.some(printer => {
-                    const printerName = extractPrinterName(printer).replace(/ /g, '');
-                    console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
-                    return printerName === processPrinterName;
-                });
-            });
-        }
-
-        // Create the ZIP file with selected printers, filaments, and processes
-        const zip = await createZip(
-            printerList.filter(printer => selectedPrinters.includes(printer.identifier)).map(printer => printer.profile),
-            filament.map(filament => filament.profile),
-            processes.map(process => process.profile)
+    const filtered = processesList.filter((process) => {
+      const processPrinterName = process.identifier
+        .split("@")[1]
+        .split(" (")[0]
+        .replace(/ /g, "");
+      const printerMatch = selectedPrinters.some((printer) => {
+        const printerName = extractPrinterName(printer);
+        console.log(
+          `Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`,
         );
+        return printerName === processPrinterName;
+      });
+      const filamentMatch = selectedFilament.some((filament) => {
+        const filamentKeyword = getFilamentMatchKeyword(filament);
+        console.log(
+          `Checking if process identifier: ${process.identifier} includes filament keyword: ${filamentKeyword}`,
+        );
+        return process.identifier.includes(filamentKeyword);
+      });
+      console.log(
+        `Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`,
+      );
+      return printerMatch && filamentMatch;
+    });
 
-        // Save the ZIP file
-        saveAs(zip, "OpenNept4une.orca_printer");
-    };
+    console.log("Filtered Processes List:", filtered); // Debug point: Verify filtered processes list
+    setFilteredProcessesList(filtered);
+  }, [selectedPrinters, selectedFilament, processesList]);
 
-    return (
-        <div class="home">
-            <h1>OpenNeptune Slicer profile generator</h1>
-            <section class="type-picker">
-                <TypeSection title="Base Config" type="base" isActive={type === "base"} onClick={setType} />
-                <TypeSection title="Custom" type="custom" isActive={type === "custom"} onClick={setType} />
-            </section>
-            <section>
-                <MultiSelectionSection title="Printer Model" options={printerList} select={updateSelectedPrinters} selectedOptions={selectedPrinters} />
-                {type === "custom" && <MultiSelectionSection title="Filament" options={filamentList} select={updateSelectedFilaments} selectedOptions={selectedFilament} />}
-                {type === "custom" && <MultiSelectionSection title="Print Settings" options={filteredProcessesList} select={updateSelectedProcesses} selectedOptions={selectedProcesses} />}
-                {slicerList.length > 1 && <SelectionSection title="Slicer" options={slicerList} select={setSelectedSlicer} selectedOption={selectedSlicer} />}
-                {<SummarySection />}
-            </section>
-            <div class={(isValidSelection() ? "generate-button" : "generate-button disabled")} onClick={generateTapped}>Generate Profile</div>
-        </div>
+  const isValidSelection = () => {
+    return selectedPrinters.length > 0 && selectedSlicer !== null;
+  };
+
+  const updateSelectedPrinters = (printer) => {
+    if (selectedPrinters.includes(printer)) {
+      setSelectedPrinters(selectedPrinters.filter((p) => p !== printer));
+    } else {
+      setSelectedPrinters([...selectedPrinters, printer]);
+    }
+  };
+
+  const updateSelectedFilaments = (filament) => {
+    if (selectedFilament.includes(filament)) {
+      setSelectedFilament(selectedFilament.filter((p) => p !== filament));
+    } else {
+      setSelectedFilament([...selectedFilament, filament]);
+    }
+  };
+
+  const updateSelectedProcesses = (process) => {
+    if (selectedProcesses.includes(process)) {
+      setSelectedProcesses(selectedProcesses.filter((p) => p !== process));
+    } else {
+      setSelectedProcesses([...selectedProcesses, process]);
+    }
+  };
+
+  const generateTapped = async () => {
+    let filament;
+    let processes;
+
+    if (type === "base") {
+      filament = filamentList;
+      processes = processesList;
+    } else {
+      filament = filamentList.filter((filament) =>
+        selectedFilament.includes(filament.identifier),
+      );
+
+      // Filter processes based on exact printer name match
+      processes = processesList.filter((process) => {
+        const processPrinterName = process.identifier
+          .split("@")[1]
+          .split(" (")[0]
+          .replace(/ /g, "");
+
+        // Check if the selected printer matches exactly with the process printer name
+        return selectedPrinters.some((printer) => {
+          const printerName = extractPrinterName(printer).replace(/ /g, "");
+          console.log(
+            `Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`,
+          );
+          return printerName === processPrinterName;
+        });
+      });
+    }
+
+    // Create the ZIP file with selected printers, filaments, and processes
+    const zip = await createZip(
+      printerList
+        .filter((printer) => selectedPrinters.includes(printer.identifier))
+        .map((printer) => printer.profile),
+      filament.map((filament) => filament.profile),
+      processes.map((process) => process.profile),
     );
+
+    // Save the ZIP file
+    saveAs(zip, "OpenNept4une.orca_printer");
+  };
+
+  return (
+    <div class="home">
+      <h1>OpenNeptune Slicer profile generator</h1>
+      <section class="type-picker">
+        <TypeSection
+          title="Base Config"
+          type="base"
+          isActive={type === "base"}
+          onClick={setType}
+        />
+        <TypeSection
+          title="Custom"
+          type="custom"
+          isActive={type === "custom"}
+          onClick={setType}
+        />
+      </section>
+      <section>
+        <MultiSelectionSection
+          title="Printer Model"
+          options={printerList}
+          select={updateSelectedPrinters}
+          selectedOptions={selectedPrinters}
+        />
+        {type === "custom" && (
+          <MultiSelectionSection
+            title="Filament"
+            options={filamentList}
+            select={updateSelectedFilaments}
+            selectedOptions={selectedFilament}
+          />
+        )}
+        {type === "custom" && (
+          <MultiSelectionSection
+            title="Print Settings"
+            options={filteredProcessesList}
+            select={updateSelectedProcesses}
+            selectedOptions={selectedProcesses}
+          />
+        )}
+        {slicerList.length > 1 && (
+          <SelectionSection
+            title="Slicer"
+            options={slicerList}
+            select={setSelectedSlicer}
+            selectedOption={selectedSlicer}
+          />
+        )}
+        {<SummarySection />}
+      </section>
+      <div
+        class={
+          isValidSelection() ? "generate-button" : "generate-button disabled"
+        }
+        onClick={generateTapped}
+      >
+        Generate Profile
+      </div>
+    </div>
+  );
 }
 
 function Selection(props) {
-    const handleClick = () => {
-        props.select(props.identifier);
-    };
+  const handleClick = () => {
+    props.select(props.identifier);
+  };
 
-    return (<label>
-        <input
-            type="radio"
-            checked={props.checked}
-            onClick={handleClick}
-        />
-        {props.label}
-    </label>);
+  return (
+    <label>
+      <input type="radio" checked={props.checked} onClick={handleClick} />
+      {props.label}
+    </label>
+  );
 }
 
 function MultiSelectionSection(props) {
-    let emptyText = props.emptyText ? props.emptyText : "No options available";
-    return (
-        <div class="resource box">
-            <h2>{props.title}</h2>
-            {props.options.length === 0 && <p class="empty">{emptyText}</p>}
-            <ul>
-                {props.options && props.options.map(option => (
-                    <li key={option.identifier}>
-                        <Selection label={option.name} identifier={option.identifier} checked={props.selectedOptions.includes(option.identifier)} select={props.select} />
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  let emptyText = props.emptyText ? props.emptyText : "No options available";
+  return (
+    <div class="resource box">
+      <h2>{props.title}</h2>
+      {props.options.length === 0 && <p class="empty">{emptyText}</p>}
+      <ul>
+        {props.options &&
+          props.options.map((option) => (
+            <li key={option.identifier}>
+              <Selection
+                label={option.name}
+                identifier={option.identifier}
+                checked={props.selectedOptions.includes(option.identifier)}
+                select={props.select}
+              />
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
 }
 
 function SelectionSection(props) {
-    return (
-        <div class="resource box">
-            <h2>{props.title}</h2>
-            <ul>
-                {props.options && props.options.map(option => (
-                    <li key={option.identifier}>
-                        <Selection label={option.name} identifier={option.identifier} checked={props.selectedOption === option.identifier} select={props.select} />
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <div class="resource box">
+      <h2>{props.title}</h2>
+      <ul>
+        {props.options &&
+          props.options.map((option) => (
+            <li key={option.identifier}>
+              <Selection
+                label={option.name}
+                identifier={option.identifier}
+                checked={props.selectedOption === option.identifier}
+                select={props.select}
+              />
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
 }
 
 function TypeSection(props) {
-    function handleClick() {
-        props.onClick(props.type);
-    }
+  function handleClick() {
+    props.onClick(props.type);
+  }
 
-    return (
-        <div class={props.isActive ? 'generator-type box active' : 'generator-type box'} onClick={handleClick}>
-            <h1>{props.title}</h1>
-        </div>
-    );
+  return (
+    <div
+      class={
+        props.isActive ? "generator-type box active" : "generator-type box"
+      }
+      onClick={handleClick}
+    >
+      <h1>{props.title}</h1>
+    </div>
+  );
 }
 
 function SummarySection() {
-    return (
-        <div class="resource box">
-            <h2>Summary</h2>
-        </div>
-    );
+  return (
+    <div class="resource box">
+      <h2>Summary</h2>
+    </div>
+  );
 }
