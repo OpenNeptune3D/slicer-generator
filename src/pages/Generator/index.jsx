@@ -35,20 +35,24 @@ export function Generator() {
 
     useEffect(() => {
         const extractPrinterName = (printer) => {
-            return printer.split(' (')[0].replace(' ', ''); // Remove spaces for matching
+            return printer.split(' (')[0].replace(/ /g, '');
+        };
+
+        const getFilamentMatchKeyword = (filament) => {
+            return filament.includes('PLA') ? 'Standard' : filament;
         };
 
         const filtered = processesList.filter(process => {
-            const processPrinterName = process.identifier.split('@')[1].split(' (')[0].replace(' ', '');
+            const processPrinterName = process.identifier.split('@')[1].split(' (')[0].replace(/ /g, '');
             const printerMatch = selectedPrinters.some(printer => {
                 const printerName = extractPrinterName(printer);
                 console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
                 return printerName === processPrinterName;
             });
             const filamentMatch = selectedFilament.some(filament => {
-                const filamentName = filament.replace(' ', '');
-                console.log(`Checking if process identifier: ${process.identifier} includes filament name: ${filamentName}`);
-                return process.identifier.includes(filamentName);
+                const filamentKeyword = getFilamentMatchKeyword(filament);
+                console.log(`Checking if process identifier: ${process.identifier} includes filament keyword: ${filamentKeyword}`);
+                return process.identifier.includes(filamentKeyword);
             });
             console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`);
             return printerMatch && filamentMatch;
