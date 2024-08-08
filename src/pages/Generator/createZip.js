@@ -1,24 +1,19 @@
-import JSZip from "jszip";
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
-function addFile(zip, type, file) {
-    let path = type + "/" + file.name
-        if (path.indexOf(".json") === -1) {
-            path += ".json";
-        }
-        zip.file(path, file.content);
-}
-
-export const createZip = async (printer_profiles, filament_profiles, process_profiles) => {
+export async function createZip(printers, filaments, processes) {
     const zip = new JSZip();
-    console.log(printer_profiles, filament_profiles, process_profiles);
-    printer_profiles.forEach((file) => {
-        addFile(zip, "printers", file);
+    printers.forEach((printer, index) => {
+        zip.file(`printers/Printer_${index + 1}.json`, JSON.stringify(printer, null, 2));
     });
-    filament_profiles.forEach((file) => {
-        addFile(zip, "filaments", file);
+    filaments.forEach((filament, index) => {
+        zip.file(`filaments/Filament_${index + 1}.json`, JSON.stringify(filament, null, 2));
     });
-    process_profiles.forEach((file) => {
-        addFile(zip, "processes", file);
+
+    processes.forEach((process, index) => {
+        zip.file(`processes/Process_${index + 1}.json`, JSON.stringify(process, null, 2));
     });
-    return zip.generateAsync({ type: "blob" });
-};
+
+    const content = await zip.generateAsync({ type: 'blob' });
+    saveAs(content, 'OpenNept4uneProfiles.zip');
+}
