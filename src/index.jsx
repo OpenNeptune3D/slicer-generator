@@ -1,5 +1,6 @@
 import { useLocation } from 'preact-iso';
-import openneptuneLogo from 'https://raw.githubusercontent.com/OpenNeptune3D/slicer-generator/main/src/assets/OpenNept4une.svg';
+// Import statement for the logo is commented out because it's causing build issues
+// import openneptuneLogo from '../assets/OpenNept4une.svg';
 
 export function Header() {
 	const { url } = useLocation();
@@ -7,13 +8,14 @@ export function Header() {
 	return (
 		<header>
 			<a href={import.meta.env.BASE_URL}>
-			<img src={openneptuneLogo} alt="OpenNeptune logo" class="logo" />
+				{/* Commenting out the logo image as it is causing build issues */}
+				{/* <img src={openneptuneLogo} alt="OpenNeptune logo" class="logo" /> */}
 			</a>
 			<nav>
-				<a href={import.meta.env.BASE_URL} class={url == import.meta.env.BASE_URL && 'active'}>
+				<a href={import.meta.env.BASE_URL} class={url == import.meta.env.BASE_URL ? 'active' : ''}>
 					Home
 				</a>
-				<a href={import.meta.env.BASE_URL+"about"} class={url == import.meta.env.BASE_URL+'about' && 'active'}>
+				<a href={import.meta.env.BASE_URL+"about"} class={url == import.meta.env.BASE_URL+'about' ? 'active' : ''}>
 					About
 				</a>
 			</nav>
