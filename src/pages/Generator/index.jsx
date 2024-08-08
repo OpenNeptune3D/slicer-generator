@@ -25,8 +25,13 @@ export function Generator() {
     }, []);
 
     useEffect(() => {
+        const extractPrinterName = (printer) => {
+            return printer.split(' (')[0];
+        };
+
         const filtered = processesList.filter(process => {
-            const printerMatch = selectedPrinters.some(printer => process.identifier.includes(printer));
+            const processPrinterName = process.identifier.split('@')[1].split(' (')[0];
+            const printerMatch = selectedPrinters.some(printer => extractPrinterName(printer) === processPrinterName);
             const filamentMatch = selectedFilament.some(filament => process.identifier.includes(filament));
             return printerMatch && filamentMatch;
         });
