@@ -26,8 +26,8 @@ export function Generator() {
 
     useEffect(() => {
         const filtered = processesList.filter(process => {
-            let printerMatch = selectedPrinters.some(printer => process.identifier.indexOf(printer) !== -1);
-            let filamentMatch = selectedFilament.some(filament => process.identifier.indexOf(filament) !== -1);
+            const printerMatch = selectedPrinters.some(printer => process.identifier.includes(printer));
+            const filamentMatch = selectedFilament.some(filament => process.identifier.includes(filament));
             return printerMatch && filamentMatch;
         });
         setFilteredProcessesList(filtered);
