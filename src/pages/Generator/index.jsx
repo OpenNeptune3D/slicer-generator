@@ -26,15 +26,12 @@ export function Generator() {
 
     useEffect(() => {
         const filtered = processesList.filter(process => {
-            for (let i = 0; i < selectedPrinters.length; i++) {
-                if (process.identifier.indexOf(selectedPrinters[i]) !== -1) {
-                    return true;
-                }
-            }
-            return false;
+            let printerMatch = selectedPrinters.some(printer => process.identifier.indexOf(printer) !== -1);
+            let filamentMatch = selectedFilament.some(filament => process.identifier.indexOf(filament) !== -1);
+            return printerMatch && filamentMatch;
         });
         setFilteredProcessesList(filtered);
-    }, [selectedPrinters, processesList]);
+    }, [selectedPrinters, selectedFilament, processesList]);
 
     const isValidSelection = () => {
         return selectedPrinters.length > 0 && selectedSlicer !== null;
