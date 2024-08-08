@@ -42,7 +42,10 @@ export function Generator() {
             if (filament.includes('PLA')) {
                 return 'Standard';
             }
-            return filament; // Directly return the filament name for non-PLA filaments
+            if (filament.includes('PETG')) {
+                return 'PETG';
+            }
+            return filament.split(' ').pop(); // Extract the last part of the filament name if not PLA or PETG
         };
 
         const filtered = processesList.filter(process => {
