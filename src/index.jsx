@@ -1,24 +1,30 @@
-import { useLocation } from 'preact-iso';
-// Import statement for the logo is commented out because it's causing build issues
-// import openneptuneLogo from '../assets/OpenNept4une.svg';
+import { LocationProvider, Router, Route, hydrate, prerender as ssr } from 'preact-iso';
 
-export function Header() {
-	const { url } = useLocation();
+import { Header } from './components/Header.jsx';
+import { Generator } from './pages/Generator/index.jsx';
+import { About } from './pages/About/index.jsx';
+import { NotFound } from './pages/_404.jsx';
+import './style.css';
 
+export function App() {
 	return (
-		<header>
-			<a href={import.meta.env.BASE_URL}>
-				{/* Commenting out the logo image as it is causing build issues */}
-				{/* <img src={openneptuneLogo} alt="OpenNeptune logo" class="logo" /> */}
-			</a>
-			<nav>
-				<a href={import.meta.env.BASE_URL} class={url == import.meta.env.BASE_URL ? 'active' : ''}>
-					Home
-				</a>
-				<a href={import.meta.env.BASE_URL+"about"} class={url == import.meta.env.BASE_URL+'about' ? 'active' : ''}>
-					About
-				</a>
-			</nav>
-		</header>
+		<LocationProvider>
+			<Header />
+			<main>
+				<Router>
+					<Route path={import.meta.env.BASE_URL} component={Generator} />
+					<Route path={import.meta.env.BASE_URL+"about"} component={About} />
+					<Route default component={NotFound} />
+				</Router>
+			</main>
+		</LocationProvider>
 	);
+}
+
+if (typeof window !== 'undefined') {
+	hydrate(<App />, document.getElementById('app'));
+}
+
+export async function prerender(data) {
+	return await ssr(<App {...data} />);
 }
