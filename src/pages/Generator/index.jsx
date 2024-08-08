@@ -137,13 +137,13 @@ export function Generator() {
       });
     }
 
-    // Create the ZIP file with selected printers, filaments, and processes
+    // Only map the filtered processes to their profiles
     const zip = await createZip(
       printerList
         .filter((printer) => selectedPrinters.includes(printer.identifier))
         .map((printer) => printer.profile),
       filament.map((filament) => filament.profile),
-      processes.map((process) => process.profile),
+      processes.map((process) => process.profile), // This line now only maps the filtered processes
     );
 
     // Save the ZIP file
