@@ -39,7 +39,13 @@ export function Generator() {
         };
 
         const getFilamentMatchKeyword = (filament) => {
-            return filament.includes('PLA') ? 'Standard' : filament;
+            if (filament.includes('PLA')) {
+                return 'Standard';
+            }
+            if (filament.includes('PETG')) {
+                return 'PETG';
+            }
+            return filament;
         };
 
         const filtered = processesList.filter(process => {
