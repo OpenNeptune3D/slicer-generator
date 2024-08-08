@@ -5,62 +5,48 @@
     "is_custom_defined": "0",
     "machine_end_gcode": "PRINT_END",
     "machine_max_acceleration_e": [
-        "2000",
-        "5000"
+        "2000"
     ],
     "machine_max_acceleration_extruding": [
-        "3000",
-        "20000"
+        "3000"
     ],
     "machine_max_acceleration_retracting": [
-        "3000",
-        "5000"
+        "3000"
     ],
     "machine_max_acceleration_travel": [
-        "20000",
         "20000"
     ],
     "machine_max_acceleration_x": [
-        "3000",
-        "20000"
+        "3000"
     ],
     "machine_max_acceleration_y": [
-        "3000",
-        "20000"
+        "3000"
     ],
     "machine_max_acceleration_z": [
-        "200",
-        "200"
+        "120"
     ],
     "machine_max_jerk_e": [
-        "4.5",
-        "2.5"
+        "4.5"
     ],
     "machine_max_jerk_x": [
-        "5",
-        "12"
+        "5"
     ],
     "machine_max_jerk_y": [
-        "5",
-        "12"
+        "5"
     ],
     "machine_max_speed_e": [
-        "45",
-        "25"
+        "45"
     ],
     "machine_max_speed_x": [
-        "250",
-        "200"
+        "250"
     ],
     "machine_max_speed_y": [
-        "250",
-        "200"
+        "250"
     ],
     "machine_max_speed_z": [
-        "20",
-        "12"
+        "8"
     ],
-    "machine_start_gcode": ";Nozzle diameter = [nozzle_diameter]\n;Filament type = [filament_type]\n;Filament name = [filament_vendor] \n;Filament weight = [filament_density]\nPRINT_START BED_TEMP=[hot_plate_temp_initial_layer] EXTRUDER_TEMP=[nozzle_temperature_initial_layer] AREA_START={first_layer_print_min[0]},{first_layer_print_min[1]} AREA_END={first_layer_print_max[0]},{first_layer_print_max[1]}",
+    "machine_start_gcode": ";Nozzle diameter = [nozzle_diameter]\n;Filament type = [filament_type]\n;Filament name = [filament_vendor] \n;Filament weight = [filament_density]\nPRINT_START BED_TEMP=[hot_plate_temp_initial_layer] EXTRUDER_TEMP=[nozzle_temperature_initial_layer] AREA_START={first_layer_print_min[0]},{first_layer_print_min[1]} AREA_END={first_layer_print_max[0]},{first_layer_print_max[1]} BED_HEAT_SOAK_MINUTES=0 BED_MESH=adaptive",
     "max_layer_height": [
         "0.3"
     ],    
@@ -68,9 +54,9 @@
     "nozzle_type": "undefine",
     "printable_area": [
     "0x0",
-    "320x0",
-    "320x320",
-    "0x320"
+    "330x0",
+    "330x330",
+    "0x330"
     ],
     "printer_settings_id": "Elegoo Neptune 4 Plus (0.4 nozzle)-OpenNept4une",
     "retract_before_wipe": [
@@ -80,7 +66,7 @@
         "0"
     ],
     "retraction_length": [
-        "0.15"
+        "0.3"
     ],
     "retraction_minimum_travel": [
         "2"
