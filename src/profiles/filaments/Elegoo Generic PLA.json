@@ -1,8 +1,10 @@
 {
-    "close_fan_the_first_x_layers": [
-        "3"
-    ],
     "compatible_printers": [
+        "Elegoo Neptune 0.4 nozzle",
+        "Elegoo Neptune X 0.4 nozzle",
+        "Elegoo Neptune 2 0.4 nozzle",
+        "Elegoo Neptune 2S 0.4 nozzle",
+        "Elegoo Neptune 2D 0.4 nozzle",
         "Elegoo Neptune 3 0.4 nozzle",
         "Elegoo Neptune 3 Pro 0.4 nozzle",
         "Elegoo Neptune 3 Plus 0.4 nozzle",
@@ -11,10 +13,6 @@
         "Elegoo Neptune 4 (0.4 nozzle)",
         "Elegoo Neptune 4 (0.6 nozzle)",
         "Elegoo Neptune 4 (0.8 nozzle)",
-        "Elegoo Neptune 4 Plus (0.2 nozzle)",
-        "Elegoo Neptune 4 Plus (0.4 nozzle)",
-        "Elegoo Neptune 4 Plus (0.6 nozzle)",
-        "Elegoo Neptune 4 Plus (0.8 nozzle)",
         "Elegoo Neptune 4 Max (0.2 nozzle)",
         "Elegoo Neptune 4 Max (0.4 nozzle)",
         "Elegoo Neptune 4 Max (0.6 nozzle)",
@@ -24,13 +22,31 @@
         "Elegoo Neptune 4 Pro (0.6 nozzle)",
         "Elegoo Neptune 4 Pro (0.8 nozzle)"
     ],
+    "filament_deretraction_speed": [
+        "30"
+    ],
     "filament_flow_ratio": [
-        "1"
+        "0.98"
+    ],
+    "filament_retract_restart_extra": [
+        "0"
+    ],
+    "filament_retraction_length": [
+        "0.3"
+    ],
+    "filament_retraction_speed": [
+        "40"
     ],
     "filament_settings_id": [
         "Elegoo Generic PLA-OpenNept4une"
     ],
+    "filament_start_gcode": [
+        "; filament start gcode\nSET_RETRACTION RETRACT_LENGTH=[filament_retraction_length] RETRACT_SPEED=[filament_retraction_speed] UNRETRACT_EXTRA_LENGTH=[retract_restart_extra] UNRETRACT_SPEED=[filament_deretraction_speed]\nSET_PRESSURE_ADVANCE ADVANCE=0.02725 SMOOTH_TIME=0.02"
+    ],
     "from": "User",
+    "full_fan_speed_layer": [
+        "5"
+    ],
     "inherits": "Elegoo Generic PLA",
     "is_custom_defined": "0",
     "name": "Elegoo Generic PLA-OpenNept4une",
@@ -44,6 +60,9 @@
         "190"
     ],
     "slow_down_for_layer_cooling": [
+        "0"
+    ],
+    "pressure_advance": [
         "0"
     ],
     "version": "1.9.0.2"
