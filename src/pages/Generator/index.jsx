@@ -21,10 +21,14 @@ export function Generator() {
   const [selectedSlicer, setSelectedSlicer] = useState("orcaslicer");
 
   useEffect(() => {
+    console.log("Selected Printers:", selectedPrinters);
+    console.log("Selected Filament:", selectedFilament);
+    console.log("Processes List:", processesList);
+  
     const extractPrinterName = (printer) => {
       return printer.split(" (")[0].replace(/ /g, "");
     };
-
+  
     const getFilamentMatchKeyword = (filament) => {
       if (filament.includes("PLA")) {
         return "PLA";
@@ -34,37 +38,33 @@ export function Generator() {
       }
       return filament.split(" ").pop().replace(/-/g, "").replace("OpenNept4une", "").trim();
     };
-
+  
     const filtered = processesList.filter((process) => {
       const processPrinterName = process.identifier
         .split("@")[1]
         .split(" (")[0]
         .replace(/ /g, "");
-      
+
+console.log("Filtered Processes List:", filtered);
+setFilteredProcessesList(filtered);
+  
       const printerMatch = selectedPrinters.some((printer) => {
         const printerName = extractPrinterName(printer);
-        console.log(
-          `Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`,
-        );
+        console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
         return printerName === processPrinterName;
       });
   
       const filamentMatch = selectedFilament.some((filament) => {
         const filamentKeyword = getFilamentMatchKeyword(filament);
-        console.log(
-          `Checking if process identifier: ${process.identifier} includes filament keyword: ${filamentKeyword}`,
-        );
+        console.log(`Checking if process identifier: ${process.identifier} includes filament keyword: ${filamentKeyword}`);
         return process.identifier.toLowerCase().includes(filamentKeyword.toLowerCase());
       });
   
-      console.log(
-        `Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`,
-      );
-  
+      console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`);
       return printerMatch && filamentMatch;
     });
   
-    console.log("Filtered Processes List:", filtered); // Debug point: Verify filtered processes list
+    console.log("Filtered Processes List:", filtered);
     setFilteredProcessesList(filtered);
   }, [selectedPrinters, selectedFilament, processesList]);
 
