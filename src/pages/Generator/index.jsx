@@ -124,26 +124,24 @@ const generateTapped = async () => {
       const processPrinterName = process.identifier
         .split("@")[1]
         .split(" (")[0]
-        .replace(/ /g, "");
+        .replace(/ /g, "")
+        .toLowerCase(); // Normalize the process printer name for consistent comparison
 
       // Check if the selected printer matches exactly with the process printer name
       return selectedPrinters.some((printer) => {
-        const printerName = extractPrinterName(printer).replace(/ /g, "");
-        console.log(
-          `Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`
-        );
+        const printerName = extractPrinterName(printer).replace(/ /g, "").toLowerCase();
         return printerName === processPrinterName;
       });
     });
   }
 
-  // Only map the filtered processes to their profiles
+  // Map the filtered processes to their profiles
   const zip = await createZip(
     printerList
       .filter((printer) => selectedPrinters.includes(printer.identifier))
       .map((printer) => printer.profile),
     filament.map((filament) => filament.profile),
-    processes.map((process) => process.profile) // This line now only maps the filtered processes
+    processes.map((process) => process.profile) // Only map the filtered processes
   );
 
   // Save the ZIP file
