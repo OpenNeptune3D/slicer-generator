@@ -19,31 +19,20 @@ export function Generator() {
   const [selectedSlicer, setSelectedSlicer] = useState("orcaslicer");
 
   useEffect(() => {
-    compilePrinterList().then((list) => {
-      console.log("Printer List:", list);
-      setPrinterList(list);
-    });
-    compileFilamentList().then((list) => {
-      console.log("Filament List:", list);
-      setFilamentList(list);
-    });
-    compileProcessList().then((list) => {
-      console.log("Process List:", list);
-      setProcessesList(list);
-    });
+    compilePrinterList().then((list) => setPrinterList(list));
+    compileFilamentList().then((list) => setFilamentList(list));
+    compileProcessList().then((list) => setProcessesList(list));
   }, []);
 
   useEffect(() => {
-    const extractPrinterName = (printer) => {
-      return printer.split(" (")[0].replace(/ /g, "").toLowerCase();
-    };
+    const extractPrinterName = (printer) => printer.split(" (")[0].replace(/ /g, "").toLowerCase();
 
     const getFilamentMatchKeyword = (filament) => {
       if (filament.toLowerCase().includes("pla")) {
-        return "standard";  // Correct mapping for PLA to "Standard"
+        return "standard";
       }
       if (filament.toLowerCase().includes("petg")) {
-        return "petg";  // PETG maps directly to "PETG"
+        return "petg";
       }
       return filament.split(" ").pop().replace(/-/g, "").replace("opennept4une", "").trim().toLowerCase();
     };
@@ -57,84 +46,55 @@ export function Generator() {
     
       const printerMatch = selectedPrinters.some((printer) => {
         const printerName = extractPrinterName(printer);
-        console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
         return printerName === processPrinterName;
       });
 
       const filamentMatch = selectedFilament.length === 0 || selectedFilament.some((filament) => {
         const filamentKeyword = getFilamentMatchKeyword(filament);
-        console.log(`Checking if process identifier: ${process.identifier} includes filament keyword: ${filamentKeyword}`);
         return process.identifier.toLowerCase().includes(filamentKeyword);
       });
-  
-      console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`);
+
       return printerMatch && filamentMatch;
     });
-  
-    console.log("Filtered Processes List:", filtered);
+
     setFilteredProcessesList(filtered);
   }, [selectedPrinters, selectedFilament, processesList]);
-  
-  const isValidSelection = () => {
-    return selectedPrinters.length > 0 && selectedSlicer !== null;
-  };
+
+  const isValidSelection = () => selectedPrinters.length > 0 && selectedSlicer !== null;
 
   const updateSelectedPrinters = (printer) => {
-    if (selectedPrinters.includes(printer)) {
-      setSelectedPrinters(selectedPrinters.filter((p) => p !== printer));
-    } else {
-      setSelectedPrinters([...selectedPrinters, printer]);
-    }
+    setSelectedPrinters((prevSelected) =>
+      prevSelected.includes(printer) ? prevSelected.filter((p) => p !== printer) : [...prevSelected, printer]
+    );
   };
 
   const updateSelectedFilaments = (filament) => {
-    if (selectedFilament.includes(filament)) {
-      setSelectedFilament(selectedFilament.filter((p) => p !== filament));
-    } else {
-      setSelectedFilament([...selectedFilament, filament]);
-    }
+    setSelectedFilament((prevSelected) =>
+      prevSelected.includes(filament) ? prevSelected.filter((p) => p !== filament) : [...prevSelected, filament]
+    );
   };
 
   const updateSelectedProcesses = (process) => {
-    if (selectedProcesses.includes(process)) {
-      setSelectedProcesses(selectedProcesses.filter((p) => p !== process));
-    } else {
-      setSelectedProcesses([...selectedProcesses, process]);
-    }
+    setSelectedProcesses((prevSelected) =>
+      prevSelected.includes(process) ? prevSelected.filter((p) => p !== process) : [...prevSelected, process]
+    );
   };
 
   const generateTapped = async () => {
-    let filament;
-    let processes;
+    const selectedFilamentProfiles = selectedFilament.length > 0 ? 
+      filamentList.filter((filament) => selectedFilament.includes(filament.identifier)) : 
+      filamentList;
 
-    if (type === "base") {
-      filament = filamentList;
-      processes = processesList;
-    } else {
-      filament = filamentList.filter((filament) =>
-        selectedFilament.includes(filament.identifier)
-      );
-
-      processes = processesList.filter((process) => {
-        const processPrinterName = process.identifier
-          .split("@")[1]
-          .split(" (")[0]
-          .replace(/ /g, "")
-          .toLowerCase();
-
-        return selectedPrinters.some((printer) => {
-          const printerName = extractPrinterName(printer).replace(/ /g, "").toLowerCase();
-          return printerName === processPrinterName;
-        });
-      });
-    }
+    const selectedProcessProfiles = selectedProcesses.length > 0 ? 
+      filteredProcessesList.filter((process) => selectedProcesses.includes(process.identifier)) : 
+      filteredProcessesList;
 
     const zip = await createZip(
       printerList
         .filter((printer) => selectedPrinters.includes(printer.identifier))
         .map((printer) => printer.profile),
-      filament.map((filament) => filament.profile),
-      processes.map((process) => process.profile)
+      selectedFilamentProfiles.map((filament) => filament.profile),
+      selectedProcessProfiles.map((process) => process.profile)
     );
 
     saveAs(zip, "OpenNept4une.orca_printer");
@@ -201,9 +161,7 @@ export function Generator() {
 }
 
 function Selection(props) {
-  const handleClick = () => {
-    props.select(props.identifier);
-  };
+  const handleClick = () => props.select(props.identifier);
 
   return (
     <label>
@@ -214,14 +172,15 @@ function Selection(props) {
 }
 
 function MultiSelectionSection(props) {
-  let emptyText = props.emptyText ? props.emptyText : "No options available";
+  const emptyText = props.emptyText || "No options available";
   return (
     <div class="resource box">
       <h2>{props.title}</h2>
-      {props.options.length === 0 && <p class="empty">{emptyText}</p>}
-      <ul>
-        {props.options &&
-          props.options.map((option) => (
+      {props.options.length === 0 ? (
+        <p class="empty">{emptyText}</p>
+      ) : (
+        <ul>
+          {props.options.map((option) => (
             <li key={option.identifier}>
               <Selection
                 label={option.name}
@@ -231,7 +190,8 @@ function MultiSelectionSection(props) {
               />
             </li>
           ))}
-      </ul>
+        </ul>
+      )}
     </div>
   );
 }
@@ -241,33 +201,26 @@ function SelectionSection(props) {
     <div class="resource box">
       <h2>{props.title}</h2>
       <ul>
-        {props.options &&
-          props.options.map((option) => (
-            <li key={option.identifier}>
-              <Selection
-                label={option.name}
-                identifier={option.identifier}
-                checked={props.selectedOption === option.identifier}
-                select={props.select}
-              />
-            </li>
-          ))}
+        {props.options.map((option) => (
+          <li key={option.identifier}>
+            <Selection
+              label={option.name}
+              identifier={option.identifier}
+              checked={props.selectedOption === option.identifier}
+              select={props.select}
+            />
+          </li>
+        ))}
       </ul>
     </div>
   );
 }
 
 function TypeSection(props) {
-  function handleClick() {
-    props.onClick(props.type);
-  }
-
   return (
     <div
-      class={
-        props.isActive ? "generator-type box active" : "generator-type box"
-      }
-      onClick={handleClick}
+      class={props.isActive ? "generator-type box active" : "generator-type box"}
+      onClick={() => props.onClick(props.type)}
     >
       <h1>{props.title}</h1>
     </div>
