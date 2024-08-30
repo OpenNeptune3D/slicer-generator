@@ -217,10 +217,11 @@ function MultiSelectionSection(props) {
   return (
     <div class="resource box">
       <h2>{props.title}</h2>
-      {props.options.length === 0 && <p class="empty">{emptyText}</p>}
-      <ul>
-        {props.options &&
-          props.options.map((option) => (
+      {props.options.length === 0 ? (
+        <p class="empty">{emptyText}</p>
+      ) : (
+        <ul>
+          {props.options.map((option) => (
             <li key={option.identifier}>
               <Selection
                 label={option.name}
@@ -230,7 +231,8 @@ function MultiSelectionSection(props) {
               />
             </li>
           ))}
-      </ul>
+        </ul>
+      )}
     </div>
   );
 }
