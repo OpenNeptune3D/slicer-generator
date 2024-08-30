@@ -5,8 +5,8 @@ export default async function compileFilamentList() {
             const profile = await filaments[key]();
             return {
                 name: profile.name.replace("-OpenNept4une", ""),
-                identifier: key.split('/').pop().replace('.json', ''), // Use the file name without the extension as identifier
-                profile: profile
+                identifier: key.split('/').pop().replace('.json', ''),
+                profile: profile // Ensure the profile is fully loaded
             };
         }));
         return filamentList;
