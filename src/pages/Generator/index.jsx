@@ -19,72 +19,62 @@ export function Generator() {
   const [selectedSlicer, setSelectedSlicer] = useState("orcaslicer");
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const printers = await compilePrinterList();
-        const filaments = await compileFilamentList();
-        const processes = await compileProcessList();
-
-        setPrinterList(printers);
-        setFilamentList(filaments);
-        setProcessesList(processes);
-
-        console.log("Printers:", printers);
-        console.log("Filaments:", filaments);
-        console.log("Processes:", processes);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
-    fetchData();
+    compilePrinterList().then((list) => {
+      console.log("Printer List:", list);
+      setPrinterList(list);
+    });
+    compileFilamentList().then((list) => {
+      console.log("Filament List:", list);
+      setFilamentList(list);
+    });
+    compileProcessList().then((list) => {
+      console.log("Process List:", list);
+      setProcessesList(list);
+    });
   }, []);
 
   useEffect(() => {
-    console.log("Selected Printers:", selectedPrinters);
-    console.log("Selected Filament:", selectedFilament);
-    console.log("Processes List:", processesList);
-
     const extractPrinterName = (printer) => {
-      return printer.split(" (")[0].replace(/ /g, "");
+      return printer.split(" (")[0].replace(/ /g, "").toLowerCase();
     };
 
     const getFilamentMatchKeyword = (filament) => {
-      if (filament.includes("PLA")) {
-        return "PLA";
+      if (filament.toLowerCase().includes("pla")) {
+        return "standard";  // Correct mapping for PLA to "Standard"
       }
-      if (filament.includes("PETG")) {
-        return "PETG";
+      if (filament.toLowerCase().includes("petg")) {
+        return "petg";  // PETG maps directly to "PETG"
       }
-      return filament.split(" ").pop().replace(/-/g, "").replace("OpenNept4une", "").trim();
+      return filament.split(" ").pop().replace(/-/g, "").replace("opennept4une", "").trim().toLowerCase();
     };
 
     const filtered = processesList.filter((process) => {
       const processPrinterName = process.identifier
         .split("@")[1]
         .split(" (")[0]
-        .replace(/ /g, "");
-
+        .replace(/ /g, "")
+        .toLowerCase();
+    
       const printerMatch = selectedPrinters.some((printer) => {
         const printerName = extractPrinterName(printer);
         console.log(`Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`);
         return printerName === processPrinterName;
       });
 
-      const filamentMatch = selectedFilament.some((filament) => {
+      const filamentMatch = selectedFilament.length === 0 || selectedFilament.some((filament) => {
         const filamentKeyword = getFilamentMatchKeyword(filament);
         console.log(`Checking if process identifier: ${process.identifier} includes filament keyword: ${filamentKeyword}`);
-        return process.identifier.toLowerCase().includes(filamentKeyword.toLowerCase());
+        return process.identifier.toLowerCase().includes(filamentKeyword);
       });
-
+  
       console.log(`Process: ${process.identifier}, Printer Match: ${printerMatch}, Filament Match: ${filamentMatch}`);
       return printerMatch && filamentMatch;
     });
-
+  
     console.log("Filtered Processes List:", filtered);
     setFilteredProcessesList(filtered);
   }, [selectedPrinters, selectedFilament, processesList]);
-
+  
   const isValidSelection = () => {
     return selectedPrinters.length > 0 && selectedSlicer !== null;
   };
@@ -201,9 +191,7 @@ export function Generator() {
         {<SummarySection />}
       </section>
       <div
-        class={
-          isValidSelection() ? "generate-button" : "generate-button disabled"
-        }
+        class={isValidSelection() ? "generate-button" : "generate-button disabled"}
         onClick={generateTapped}
       >
         Generate Profile
@@ -230,11 +218,10 @@ function MultiSelectionSection(props) {
   return (
     <div class="resource box">
       <h2>{props.title}</h2>
-      {props.options.length === 0 ? (
-        <p class="empty">{emptyText}</p>
-      ) : (
-        <ul>
-          {props.options.map((option) => (
+      {props.options.length === 0 && <p class="empty">{emptyText}</p>}
+      <ul>
+        {props.options &&
+          props.options.map((option) => (
             <li key={option.identifier}>
               <Selection
                 label={option.name}
@@ -244,8 +231,7 @@ function MultiSelectionSection(props) {
               />
             </li>
           ))}
-        </ul>
-      )}
+      </ul>
     </div>
   );
 }
