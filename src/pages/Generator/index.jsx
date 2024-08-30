@@ -24,7 +24,7 @@ export function Generator() {
     const extractPrinterName = (printer) => {
       return printer.split(" (")[0].replace(/ /g, "");
     };
-  
+
     const getFilamentMatchKeyword = (filament) => {
       if (filament.includes("PLA")) {
         return "PLA";
@@ -34,7 +34,7 @@ export function Generator() {
       }
       return filament.split(" ").pop().replace(/-/g, "").replace("OpenNept4une", "").trim();
     };
-  
+
     const filtered = processesList.filter((process) => {
       const processPrinterName = process.identifier
         .split("@")[1]
