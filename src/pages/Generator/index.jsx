@@ -107,48 +107,48 @@ export function Generator() {
     }
   };
 
-  const generateTapped = async () => {
-    let filament;
-    let processes;
+const generateTapped = async () => {
+  let filament;
+  let processes;
 
-    if (type === "base") {
-      filament = filamentList;
-      processes = processesList;
-    } else {
-      filament = filamentList.filter((filament) =>
-        selectedFilament.includes(filament.identifier),
-      );
-
-      // Filter processes based on exact printer name match
-      processes = processesList.filter((process) => {
-        const processPrinterName = process.identifier
-          .split("@")[1]
-          .split(" (")[0]
-          .replace(/ /g, "");
-
-        // Check if the selected printer matches exactly with the process printer name
-        return selectedPrinters.some((printer) => {
-          const printerName = extractPrinterName(printer).replace(/ /g, "");
-          console.log(
-            `Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`,
-          );
-          return printerName === processPrinterName;
-        });
-      });
-    }
-
-    // Only map the filtered processes to their profiles
-    const zip = await createZip(
-      printerList
-        .filter((printer) => selectedPrinters.includes(printer.identifier))
-        .map((printer) => printer.profile),
-      filament.map((filament) => filament.profile),
-      processes.map((process) => process.profile), // This line now only maps the filtered processes
+  if (type === "base") {
+    filament = filamentList;
+    processes = processesList;
+  } else {
+    filament = filamentList.filter((filament) =>
+      selectedFilament.includes(filament.identifier)
     );
 
-    // Save the ZIP file
-    saveAs(zip, "OpenNept4une.orca_printer");
-  };
+    // Filter processes based on exact printer name match
+    processes = processesList.filter((process) => {
+      const processPrinterName = process.identifier
+        .split("@")[1]
+        .split(" (")[0]
+        .replace(/ /g, "");
+
+      // Check if the selected printer matches exactly with the process printer name
+      return selectedPrinters.some((printer) => {
+        const printerName = extractPrinterName(printer).replace(/ /g, "");
+        console.log(
+          `Comparing printer name: ${printerName} with process printer name: ${processPrinterName}`
+        );
+        return printerName === processPrinterName;
+      });
+    });
+  }
+
+  // Only map the filtered processes to their profiles
+  const zip = await createZip(
+    printerList
+      .filter((printer) => selectedPrinters.includes(printer.identifier))
+      .map((printer) => printer.profile),
+    filament.map((filament) => filament.profile),
+    processes.map((process) => process.profile) // This line now only maps the filtered processes
+  );
+
+  // Save the ZIP file
+  saveAs(zip, "OpenNept4une.orca_printer");
+};
 
   return (
     <div class="home">
