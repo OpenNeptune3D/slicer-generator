@@ -90,13 +90,10 @@ export function Generator() {
       filteredProcessesList;
 
     const zip = await createZip(
-      printerList
-        .filter((printer) => selectedPrinters.includes(printer.identifier))
-        .map((printer) => printer.profile),
-      selectedFilamentProfiles.map((filament) => filament.profile),
-      selectedProcessProfiles.map((process) => process.profile)
+      printerList.filter((printer) => selectedPrinters.includes(printer.identifier)).map((printer) => ({ name: printer.name, content: printer.profile })),
+      filamentList.filter((filament) => selectedFilament.includes(filament.identifier) || selectedFilament.length === 0).map((filament) => ({ name: filament.name, content: filament.profile })),
+      filteredProcessesList.filter((process) => selectedProcesses.includes(process.identifier) || selectedProcesses.length === 0).map((process) => ({ name: process.name, content: process.profile }))
     );
-
     saveAs(zip, "OpenNept4une.orca_printer");
   };
 
