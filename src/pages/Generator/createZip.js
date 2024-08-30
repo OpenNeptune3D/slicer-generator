@@ -5,7 +5,7 @@ function addFile(zip, type, file) {
     if (path.indexOf(".json") === -1) {
         path += ".json";
     }
-    console.log(`Adding file to zip: ${path} with content:`, file.content); // Log file content
+    console.log(`Adding file to zip: ${path} with content:`, file.content); // Log file content to verify it is not empty
     zip.file(path, JSON.stringify(file.content, null, 2)); // Ensure content is correctly stringified
 }
 
