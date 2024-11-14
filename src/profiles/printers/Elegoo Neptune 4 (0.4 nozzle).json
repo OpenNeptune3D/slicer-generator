@@ -75,17 +75,17 @@
         "120"
     ],
     "machine_max_jerk_e": [
-        "4.5"
+        "7"
     ],
     "machine_max_jerk_x": [
-        "5"
+        "8"
     ],
     "machine_max_jerk_y": [
-        "5"
+        "8"
     ],
     "machine_max_jerk_z": [
-        "0.4",
-        "0.4"
+        "0.6",
+        "0.6"
     ],
     "machine_max_speed_e": [
         "45"
