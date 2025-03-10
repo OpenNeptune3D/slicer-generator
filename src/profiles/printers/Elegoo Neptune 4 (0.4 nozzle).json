@@ -52,7 +52,9 @@
         "0"
     ],
     "machine_end_gcode": "PRINT_END",
-    "machine_load_filament_time": "0",
+    "machine_tool_change_time": "0",
+    "machine_unload_filament_time": "0",
+    "manual_filament_change": "1",
     "machine_max_acceleration_e": [
         "2000"
     ],
